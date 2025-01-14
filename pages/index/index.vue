@@ -49,7 +49,7 @@
 		<view class="f-header m-t" @click="navToRecommendBrandPage()">
 			<image src="/static/icon_home_brand.png"></image>
 			<view class="tit-box">
-				<text class="tit">品牌制造商直供</text>
+				<text class="tit">店铺列表</text>
 				<text class="tit2">工厂直达消费者，剔除品牌溢价</text>
 			</view>
 			<text class="yticon icon-you"></text>
