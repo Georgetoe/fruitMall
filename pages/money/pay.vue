@@ -2,7 +2,7 @@
 	<view class="app">
 		<view class="price-box">
 			<text>支付金额</text>
-			<text class="price">{{orderInfo.payAmount}}</text>
+			<text class="price">{{payAmount}}</text>
 		</view>
 
 		<view class="pay-type-list">
@@ -36,22 +36,40 @@
 <script>
 	import {
 		fetchOrderDetail,
-		payOrderSuccess
+		fetchOrdersDetail,
+		payOrderSuccess,
+		payOrdersSuccess
 	} from '@/api/order.js';
 	import { API_BASE_URL, USE_ALIPAY } from '@/utils/appConfig.js';
+	
 	export default {
 		data() {
+			let payAmount =0;
+			let orderIds =null;
 			return {
-				orderId: null,
+				orderIds: null,
+				orders:null,
 				payType: 1,
-				orderInfo: {}
+				orderInfo: {},
+				payAmount,
+				orderIds
 			};
 		},
 		onLoad(options) {
-			this.orderId = options.orderId;
-			fetchOrderDetail(this.orderId).then(response => {
-				this.orderInfo = response.data;
+			this.orderIds = options.orderIds;
+			fetchOrdersDetail(this.orderIds).then(response => {
+				let data=response.data;
+			
+				for(let orderId in data)
+				{
+					let orderInfo=data[orderId];
+						//计算当前订单价值
+					    this.payAmount+=orderInfo.payAmount;
+
+				}
+				 ;
 			});
+			
 		},
 		methods: {
 			//选择支付方式
@@ -70,8 +88,9 @@
 					}
 					window.location.href = API_BASE_URL+"/alipay/webPay?outTradeNo=" + this.orderInfo.orderSn + "&subject=" + this.orderInfo.receiverName + "的商品订单" + "&totalAmount=" + this.orderInfo.totalAmount
 				}else{
-					payOrderSuccess({
-						orderId: this.orderId,
+					//发送多个订单
+					payOrdersSuccess({
+						orderIds: this.orderIds,
 						payType: this.payType
 					}).then(response => {
 						uni.redirectTo({

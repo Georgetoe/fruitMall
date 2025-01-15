@@ -34,6 +34,24 @@ export function payOrderSuccess(data) {
 		data: data
 	})
 }
+export function payOrdersSuccess(data) {
+	return request({
+		method: 'POST',
+		url: '/order/allPaySuccess',
+		header: {
+			'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+		},
+		data: data
+	})
+}
+
+//获取多个订单的详细信息
+export function fetchOrdersDetail(ordersid) {
+	return request({
+		method: 'GET',
+		url: `/order/details/${ordersid}`
+	})
+}
 
 export function fetchOrderDetail(orderId) {
 	return request({
@@ -41,6 +59,9 @@ export function fetchOrderDetail(orderId) {
 		url: `/order/detail/${orderId}`
 	})
 }
+
+
+
 
 export function cancelUserOrder(data) {
 	return request({

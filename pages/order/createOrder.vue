@@ -152,7 +152,6 @@
 		onLoad(option) {
 			//商品数据
 			this.cartIds = JSON.parse(option.cartIds);
-			console.log(this.cartIds);
 			this.loadData();
 		},
 		filters: {
@@ -228,16 +227,23 @@
 					orderParam.couponId = this.currCoupon.id;
 				}
 				generateOrder(orderParam).then(response => {
-					let orderId = response.data.order.id;
+					
+					let orderId = response.data.orders[0].id;
+					 let orders = response.data.orders;
+					
+					
 					uni.showModal({
 						title: '提示',
 						content: '订单创建成功，是否要立即支付？',
 						confirmText:'去支付',
 						cancelText:'取消',
 						success: function(res) {
+							
 							if (res.confirm) {
+						let orderIds = orders.map(order => order.id).join(',');
+						
 								uni.redirectTo({
-									url: `/pages/money/pay?orderId=${orderId}`
+									url: `/pages/money/pay?orderIds=${orderIds}`
 								})
 							} else if (res.cancel) {
 								console.log("cancel")
@@ -296,8 +302,9 @@
 					})
 				}
 			},
-		}
+	},
 	}
+	
 </script>
 
 <style lang="scss">
